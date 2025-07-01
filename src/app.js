@@ -1,16 +1,24 @@
 const express = require("express");
 const app  = express();
 
+//app.use(user,[rh1,rh2],rh3,rh4)
 
 //use --> accepts all http methods
-app.use("/test",(req,res)=>{
-    res.send("hello from server");
-})
-
-app.get("/user/:id/:name", (req, res)=>{
-    console.log(Object.assign({},req.params))
-    console.log(Object.assign({}, req.query))
-    res.send({"firstName":"aakash", "lastName": "Rajak"})
+app.use("/user",(req,res,next)=>{
+    console.log("first reponse handler")
+      next();
+ 
+}, [(req,res,next)=>{
+    console.log("second reponse handler")
+    next();
+},
+(req,res,next)=>{
+    console.log("third reponse handler")
+   next()
+}],
+(req,res,next)=>{
+    console.log("forth reponse handler")
+    res.send("response4 !");
 })
 
 app.listen(3000, () =>{
