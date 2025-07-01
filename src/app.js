@@ -1,7 +1,7 @@
 const express = require("express");
 const app  = express();
 
-//app.use(user,[rh1,rh2],rh3,rh4)
+//app.use("routes",[rh1,rh2],rh3,rh4)
 
 //use --> accepts all http methods
 app.use("/user",(req,res,next)=>{
