@@ -7,18 +7,10 @@ app.use("/test",(req,res)=>{
     res.send("hello from server");
 })
 
-app.get("/user", (req, res)=>{
+app.get("/user/:id/:name", (req, res)=>{
+    console.log(Object.assign({},req.params))
+    console.log(Object.assign({}, req.query))
     res.send({"firstName":"aakash", "lastName": "Rajak"})
-})
-
-app.post("/user", (req,res)=>{
-    //saving data to db logic
-    res.send("data has been saved successfully");
-})
-
-app.delete("/user", (req,res)=>{
-    //delete data from db logic
-    res.send("data has been deted successfully");
 })
 
 app.listen(3000, () =>{
