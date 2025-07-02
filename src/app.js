@@ -3,22 +3,21 @@ const app  = express();
 const { adminAuth, userAuth } = require("./middlewares/auth")
 
 //use --> accepts all http methods
-app.use("/user", userAuth, (req,res)=>{
-    console.log("first reponse handler")
-    res.status(200).send('success')
+app.get("/user",(req,res)=>{
+    try {
+        throw new Error("error")
+        res.status(200).send('success')
+    }catch(err){
+        res.status(500).send('some error occured contact support team')
+    }  
 })
 
-app.use("/admin", adminAuth)
-
-app.get("/admin/getAlldata",(req,res,next)=>{
-     console.log("all data is here")
-     res.status(200).send('all data is here')
+app.use('/',(err, req, res, next00) =>{
+    if(err) {
+        res.status(500).send("something went wrong")
+    }
 })
 
-app.get("/admin/getAlldata/delete",(req,res,next)=>{
-    console.log("data have deleted")
-    res.status(200).send('data have deleted')
-})
 app.listen(3000, () =>{
     console.log("server is successfully running on port: 3000");
 })
