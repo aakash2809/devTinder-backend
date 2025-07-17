@@ -45,6 +45,16 @@ app.get('/feed', async (req, res) => {
     }
 })
 
+//delete API to delete a user from db
+app.delete('/user/delete/:id', async (req, res) => {
+    try {
+        await User.findByIdAndDelete({ _id: req.params.id })
+        res.status(200).send('user has been deleted successfully')
+    } catch (err) {
+        res.status(400).send('something went wrong')
+    }
+})
+
 connnectDb().then(() => {
     console.log("database connetion stablished")
     app.listen(3000, () => {
