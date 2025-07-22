@@ -55,6 +55,16 @@ app.delete('/user/delete/:id', async (req, res) => {
     }
 })
 
+app.patch('/user/update/:id', async (req, res) => {
+    try {
+       let data = await User.findByIdAndUpdate({ _id: req.params.id }, req.body, {returnDocument: "after"})
+          console.log('---------->', data)
+        res.status(200).send('user has been updated successfully', data)
+    } catch (err) {
+        res.status(400).send('something went wrong')
+    }
+})
+
 connnectDb().then(() => {
     console.log("database connetion stablished")
     app.listen(3000, () => {
