@@ -13,13 +13,17 @@ app.post('/signUp', async (req, res) => {
         res.status(200).send('User added successfully')
 
     } catch (err) {
-        res.status(400).send('error while adding the user to database')
+
+        res.status(400).send(
+            {
+                error: true,
+                message: err.message
+            })
     }
 })
 
 
 //get api to fetch user by email id
-
 app.get('/user', async (req, res) => {
     let emailId = req.body.emailId
     console.log(req.body.emailId)
@@ -57,11 +61,16 @@ app.delete('/user/delete/:id', async (req, res) => {
 
 app.patch('/user/update/:id', async (req, res) => {
     try {
-       let data = await User.findByIdAndUpdate({ _id: req.params.id }, req.body, {returnDocument: "after"})
-          console.log('---------->', data)
+        let data = await User.findByIdAndUpdate(
+            { _id: req.params.id },
+            req.body,
+            {
+                returnDocument: "after",
+                runValidators: true
+            })
         res.status(200).send('user has been updated successfully', data)
     } catch (err) {
-        res.status(400).send('something went wrong')
+        res.status(400).send('something went wrong '+ err)
     }
 })
 
