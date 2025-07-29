@@ -4,6 +4,10 @@ const { connnectDb } = require("./config/database");
 const User = require('./models/user')
 const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
+const cookieParser = require('cookie-parser')
+const jwt = require('jsonwebtoken')
+
+app.use(cookieParser())
 app.use(express.json())
 
 app.post('/signUp', async (req, res) => {
@@ -17,7 +21,6 @@ app.post('/signUp', async (req, res) => {
         const user = new User({ firstName, lastName, emailId, password: hashPassword })
         await user.save()
         res.status(200).send('User added successfully')
-
     } catch (err) {
         res.status(400).send(
             {
@@ -27,6 +30,21 @@ app.post('/signUp', async (req, res) => {
     }
 })
 
+app.get('/profile', async (req, res) => {
+    try {
+        const cookies = req.cookies;
+        const { token } = cookies
+        if (!token) {
+            throw new Error('Invalid token')
+        }
+        const decodedMessages = await jwt.verify(token, 'secretKey')
+        const { _id } = decodedMessages
+        const user = await User.findById(_id)
+        res.send(user)
+    } catch (err) {
+        res.status(400).send(err.message)
+    }
+})
 app.post('/login', async (req, res) => {
     try {
         //creating a new instance of a user model
@@ -40,6 +58,8 @@ app.post('/login', async (req, res) => {
         //Decription and compare the password
         const isValidPassword = await bcrypt.compare(password, user.password)
         if (isValidPassword) {
+            const token = await jwt.sign({ _id: user._id }, "secretKey");
+            res.cookie('token', token)
             res.status(200).send('login successfull')
         }
         else {
@@ -57,7 +77,6 @@ app.post('/login', async (req, res) => {
 //get api to fetch user by email id
 app.get('/user', async (req, res) => {
     let emailId = req.body.emailId
-    console.log(req.body.emailId)
     try {
         let users = await User.find({ emailId: emailId })
         if (users.length === 0) {
@@ -65,7 +84,6 @@ app.get('/user', async (req, res) => {
         } else {
             res.status(200).send(users)
         }
-
     } catch (err) {
         res.status(400).send('something went wrong')
     }
