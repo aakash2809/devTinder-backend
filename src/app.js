@@ -6,6 +6,7 @@ const { validateSignUpData } = require('./utils/validation');
 const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser')
 const jwt = require('jsonwebtoken')
+const { userAuth } = require('./middlewares/auth')
 
 app.use(cookieParser())
 app.use(express.json())
@@ -30,21 +31,15 @@ app.post('/signUp', async (req, res) => {
     }
 })
 
-app.get('/profile', async (req, res) => {
+app.get('/profile', userAuth, async (req, res) => {
     try {
-        const cookies = req.cookies;
-        const { token } = cookies
-        if (!token) {
-            throw new Error('Invalid token')
-        }
-        const decodedMessages = await jwt.verify(token, 'secretKey')
-        const { _id } = decodedMessages
-        const user = await User.findById(_id)
-        res.send(user)
+       const user = req.user
+        res.status(200).send(user)
     } catch (err) {
         res.status(400).send(err.message)
     }
 })
+
 app.post('/login', async (req, res) => {
     try {
         //creating a new instance of a user model

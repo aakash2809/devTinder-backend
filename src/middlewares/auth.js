@@ -1,29 +1,27 @@
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
+const userAuth = async(req,res,next) =>{
+    try{  const cookie = req.cookies;
+   const {token} = cookie;
+   if(!token){
+    throw new Error('Invalid token')
+   }
+   decodedMessage = await jwt.verify(token, 'secretKey')
+   const  {_id } = decodedMessage;
+    const user = await User.findById(_id);
+    if(!user){
+        throw new Error('user not found')
+    }
+    req.user = user;
+    next();
+}
+   catch(err){
+    res.status(400).send(err.message)
+   }
+ 
 
-
-
-const adminAuth = (req,res,next) =>{
-    console.log("admin midleware")
-    let token = "xy"
-    let isAuthorized = token === "xyz"
-    if(!isAuthorized){
-        res.status(401).send('you are not authorized');
-    }else{
-        next();  
-    } 
- } 
-
- const userAuth = (req,res,next) =>{
-    console.log("user midleware")
-    let token = "xy"
-    let isAuthorized = token === "xyz"
-    if(!isAuthorized){
-        res.status(401).send('unauthorized requiest');
-    }else{
-        next();  
-    } 
  } 
 
  module.exports = {
-     adminAuth,
      userAuth 
  }
