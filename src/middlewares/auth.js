@@ -22,6 +22,5 @@ const userAuth = async(req,res,next) =>{
 
  } 
 
- module.exports = {
-     userAuth 
- }
+ module.exports = userAuth 
+ 
