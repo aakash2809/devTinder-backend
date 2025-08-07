@@ -6,7 +6,7 @@
 ## profileRouter
 - GET   /profile/viewS
 - PATCH  /profile/edit
-- PATCH  profile/passwordS
+- PATCH  profile/password
 
 ## connectionRequestRouter
 - POST  /request/send/intrested/:userId
