@@ -28,6 +28,9 @@ connectionRequestSchema.pre("save", function(next) {
     }
    next();
 })
+
+//search optimization using compound indexing
+connectionRequestSchema.index({fromUserId: 1, toUserId: 1})
 const ConnectionRequest = new mongoose.model("ConnectionRequest", connectionRequestSchema)
 
 module.exports = ConnectionRequest
