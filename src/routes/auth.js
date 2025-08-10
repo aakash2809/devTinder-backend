@@ -7,12 +7,12 @@ const bcrypt = require('bcrypt');
 authRouter.post('/signUp', async (req, res) => {
     try {
         //creating a new instance of a user model
-        const { firstName, lastName, emailId, password } = req.body
+        const { firstName, lastName, emailId, password, skills, age, photoUrl } = req.body
         //validation of data
         validateSignUpData(req)
         //Encription of password
         const hashPassword = await bcrypt.hash(password, 10)
-        const user = new User({ firstName, lastName, emailId, password: hashPassword })
+        const user = new User({ firstName, lastName, skills, age, photoUrl, emailId, password: hashPassword })
         await user.save()
         res.status(200).send('User added successfully')
     } catch (err) {

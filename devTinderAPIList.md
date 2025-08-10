@@ -13,6 +13,10 @@
 - POST  /request/send/ignored/:userId
 - POST  /request/review/accepted/:requestId
 - POST  /request/review/rejected/:requestId
+## these above two can be consolidated to two
+- POST /request/send/:status/:toUserId
+- POST /request/send/:status/:requestId
+
 
 ## userRouters
 - GET   /user/connections
