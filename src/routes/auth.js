@@ -1,5 +1,5 @@
-const express =  require('express')
-const authRouter =  express.Router();
+const express = require('express')
+const authRouter = express.Router();
 const User = require('../models/user')
 const { validateSignUpData } = require('../utils/validation');
 const bcrypt = require('bcrypt');
@@ -13,8 +13,14 @@ authRouter.post('/signUp', async (req, res) => {
         //Encription of password
         const hashPassword = await bcrypt.hash(password, 10)
         const user = new User({ firstName, lastName, skills, age, photoUrl, emailId, password: hashPassword })
-        await user.save()
-        res.status(200).send('User added successfully')
+        const savedUser = await user.save();
+        const token = await user.getJWT();
+        res.cookie('token', token, { expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) })
+        res.status(200).json(
+            {
+                data: savedUser,
+                message: 'User added successfully'
+            })
     } catch (err) {
         res.status(400).send(
             {
@@ -38,7 +44,7 @@ authRouter.post('/login', async (req, res) => {
         const isValidPassword = await user.validatePassword(password)
         if (isValidPassword) {
             const token = await user.getJWT();
-            res.cookie('token', token, {expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) })
+            res.cookie('token', token, { expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) })
             res.status(200).send(user)
         }
         else {
@@ -54,7 +60,7 @@ authRouter.post('/login', async (req, res) => {
 })
 
 authRouter.post('/logout', async (req, res) => {
-    res.cookie('token', null,{
+    res.cookie('token', null, {
         expires: new Date(Date.now())
     })
 

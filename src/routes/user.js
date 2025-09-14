@@ -15,10 +15,12 @@ userRouter.get('/user/requests/recieved', userAuth, async (req, res) => {
         //}).populate('fromUserId', ['firstName','lastName'])
 
         if (!connections || connections?.length == 0) {
-            return res.status(200).json('no connections are available')
+            return res.status(200).json({
+                requests: [],
+                message:'no requests are available'})
         }
 
-        res.status(200).json({ connections: connections })
+        res.status(200).json({ requests: connections })
 
     } catch (err) {
         res.status(400).json({ message: err.message })
@@ -39,7 +41,11 @@ userRouter.get('/user/connections', userAuth, async (req, res) => {
         //}).populate('fromUserId', ['firstName','lastName'])
 
         if (!connections || connections?.length == 0) {
-            return res.status(200).json('no connections are available')
+            return res.status(200).json({
+                 connections: [],
+                message:'No connections are available'
+            }
+            )
         }
 
         const data = connections.map(row => {

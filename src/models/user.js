@@ -49,7 +49,7 @@ const userSchema = new mongoose.Schema({
     },
     photoUrl: {
         type: String,
-        default: 'https://archive.org/details/instagram-plain-round/instagram%20plain%20round.jpg',
+        default: 'https://ia801307.us.archive.org/1/items/instagram-plain-round/instagram%20dip%20in%20hair.jpg',
         validate(value) {
             if (!validator.isURL(value)) {
                 throw new Error('Invalid PHOTO URL' + value)
